@@ -14,7 +14,7 @@ export const Login=()=>{
      
         e.preventDefault()
         const data={email,password}
-        const result=await fetch("http://localhost:9000/api/login",{
+        const result=await fetch("/api/login",{
             method:"post",
             body:JSON.stringify(data),
             headers:{"Content-Type":"application/json"}

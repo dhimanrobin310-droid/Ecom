@@ -1,5 +1,6 @@
 import { useState,useContext,useEffect } from "react";
 import { Context } from "./context";
+import { imageUrl } from "./imageUrl";
 
 export const Wishlist = () => {
     
@@ -7,7 +8,7 @@ export const Wishlist = () => {
     const [mywishlist, setmywishlist] = useState([])
 
   const show = async () => {
-    const result = await fetch(`http://localhost:9000/api/wishlistget/${id}`, {
+    const result = await fetch(`/api/wishlistget/${id}`, {
       method: "get",
     })
     if (result) {
@@ -72,7 +73,7 @@ export const Wishlist = () => {
       <div className="col">
         <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
           <div className="ratio ratio-4x3 bg-white">
-            <img className="w-100 h-100 object-fit-contain p-3" src={`uploads/${a.Img}`}alt={a.Name} />
+            <img className="w-100 h-100 object-fit-contain p-3" src={imageUrl(a.Img)} alt={a.Name} />
           </div>
           <div className="card-body d-flex flex-column p-4">
             <h3 className="h5 card-title fw-semibold text-dark mb-2">{a.Name}</h3>

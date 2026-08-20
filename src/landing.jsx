@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { imageUrl } from "./imageUrl"
 
 export const Landing = () => {
 
@@ -11,7 +12,7 @@ export const Landing = () => {
     },[])
 
     const showcat = async () => {
-        const result = await fetch("http://localhost:9000/api/getcategory", {
+        const result = await fetch("/api/getcategory", {
             method: "get",
         })
         if (result) {
@@ -32,13 +33,13 @@ export const Landing = () => {
                 <div class="slide-1">
                     <a href="category-page.html">
                         <div class="home">
-                            <img src="../src/assets/images/electronics-1/full-banner/1.png" alt="" class="img-fluid blur-up lazyload" />
+                            <img src="/assets/images/electronics-1/full-banner/1.png" alt="" class="img-fluid blur-up lazyload" />
 
                         </div>
                     </a>
                     <a href="category-page.html">
                         <div class="home">
-                            <img src="../src/assets/images/electronics-1/full-banner/2.png" alt="" class="img-fluid blur-up lazyload" />
+                            <img src="/assets/images/electronics-1/full-banner/2.png" alt="" class="img-fluid blur-up lazyload" />
                         </div>
                     </a>
                 </div>
@@ -49,7 +50,7 @@ export const Landing = () => {
         cat.map((a)=>
         <Link to={`/related?cid=${a._id}`}>
         <div  >
-            <img src={`uploads/${a.Image}`} height="100px" width="100px "></img>
+            <img src={imageUrl(a.Image)} height="100px" width="100px "></img>
             <p>{a.Name}</p>
         </div>
         </Link>)
@@ -63,18 +64,18 @@ export const Landing = () => {
                         <div class="row g-4">
                             <div class="col-md-4">
                                 <a href="category-page.html" class="collection-banner">
-                                    <img src="../src/assets/images/electronics-1/banner/1.png" class="img-fluid blur-up lazyload" alt="" />
+                                    <img src="/assets/images/electronics-1/banner/1.png" class="img-fluid blur-up lazyload" alt="" />
 
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a href="category-page.html" class="collection-banner">
-                                    <img src="../src/assets/images/electronics-1/banner/2.png" class="img-fluid blur-up lazyload" alt="" />
+                                    <img src="/assets/images/electronics-1/banner/2.png" class="img-fluid blur-up lazyload" alt="" />
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a href="category-page.html" class="collection-banner">
-                                    <img src="../src/assets/images/electronics-1/banner/3.png" class="img-fluid blur-up lazyload" alt="" />
+                                    <img src="/assets/images/electronics-1/banner/3.png" class="img-fluid blur-up lazyload" alt="" />
 
                                 </a>
                             </div>
@@ -102,7 +103,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/1.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/1.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -139,7 +140,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/2.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/2.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -176,7 +177,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/3.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/3.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -213,7 +214,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/4.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/4.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -250,7 +251,7 @@ export const Landing = () => {
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
 
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/5.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/5.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -287,7 +288,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/6.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/6.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -324,7 +325,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/7.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/7.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -361,7 +362,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/8.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/8.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -403,7 +404,7 @@ export const Landing = () => {
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
 
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/5.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/5.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -440,7 +441,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/6.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/6.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -477,7 +478,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/7.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/7.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>
@@ -514,7 +515,7 @@ export const Landing = () => {
                                                 <div>
                                                     <div class="basic-product theme-product-5">
                                                         <div class="img-wrapper">
-                                                            <a href="product-page(accordian).html"><img src="../src/assets/images/electronics-1/product/8.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
+                                                            <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/8.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
                                                                 <button data-bs-toggle="modal" data-bs-target="#addtocart" title="Add to cart">
                                                                     <i class="ri-shopping-cart-line"></i>

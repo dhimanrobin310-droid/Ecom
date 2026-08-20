@@ -3,6 +3,7 @@ const cors = require("cors")
 const express = require("express")
 const bcrypt = require("bcrypt")
 const multer = require("multer")
+const { put } = require("@vercel/blob")
 
 const jwt = require("jsonwebtoken")
 
@@ -11,12 +12,13 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.listen(9000, () => {
-    console.log("connected to server")
-})
+const key = process.env.JWT_SECRET || (process.env.NODE_ENV !== "production" ? "MYWEBSITE" : undefined)
+if (!key) {
+    console.warn("JWT_SECRET is not set. Authentication requests will fail until it is configured.")
+}
 
-const key="MYWEBSITE"
-mongoose.connect("mongodb://127.0.0.1:27017/Multikart")
+const databaseUrl = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/Multikart"
+mongoose.connect(databaseUrl)
     .then(() => {
         console.log("connected to mongoose")
     })
@@ -112,21 +114,22 @@ app.post("/api/contactus", async (req, res) => {
     }
 })
 
-// multer 
-
-var pic;
-
-const myStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "../public/uploads")
-    },
-    filename: (req, file, cb) => {
-        pic = Date.now() + "-" + file.originalname
-        cb(null, pic)
+// Files are stored in Vercel Blob. Serverless filesystems are not persistent.
+const upload = multer({ storage: multer.memoryStorage() })
+const saveUpload = async (file) => {
+    if (!file) return "no img"
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        throw new Error("BLOB_READ_WRITE_TOKEN is required to upload images")
     }
-})
 
-const upload = multer({ storage: myStorage })
+    const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, "-")
+    const blob = await put(`uploads/${Date.now()}-${safeName}`, file.buffer, {
+        access: "public",
+        contentType: file.mimetype,
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+    })
+    return blob.url
+}
 
 const category = mongoose.Schema({
     Name: String,
@@ -136,10 +139,8 @@ const category = mongoose.Schema({
 const Cat = mongoose.model("category", category)
 
 app.post("/api/category", upload.single("pic"), async (req, res) => {
-    if (!req.file) {
-        pic = "no img"
-    }
-    else {
+    try {
+        const pic = await saveUpload(req.file)
         const result = await Cat({
             Name: req.body.name,
             Image: pic
@@ -151,6 +152,8 @@ app.post("/api/category", upload.single("pic"), async (req, res) => {
         else {
             res.send({ statuscode: 0 })
         }
+    } catch (error) {
+        res.status(500).send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -172,10 +175,8 @@ const brand = mongoose.Schema({
 const brandname = mongoose.model("Brand", brand)
 
 app.post("/api/addbrand", upload.single("pic"), async (req, res) => {
-    if (!req.file) {
-        pic = "no img"
-    }
-    else {
+    try {
+        const pic = await saveUpload(req.file)
         const result = await brandname({
             Name: req.body.bname,
             Category: req.body.cat,
@@ -186,8 +187,10 @@ app.post("/api/addbrand", upload.single("pic"), async (req, res) => {
             res.send({ statuscode: 1 })
         }
         else {
-            res.send({ statuscode })
+            res.send({ statuscode: 0 })
         }
+    } catch (error) {
+        res.status(500).send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -226,10 +229,8 @@ const Products = mongoose.Schema({
 
 const addproduct = mongoose.model("productadd", Products)
 app.post("/api/addpro", upload.single("pic"), async (req, res) => {
-    if (!req.file) {
-        pic = "no img"
-    }
-    else {
+    try {
+        const pic = await saveUpload(req.file)
         const result = await new addproduct({
             Category: req.body.cate,
             Brand: req.body.brand ,
@@ -249,6 +250,8 @@ app.post("/api/addpro", upload.single("pic"), async (req, res) => {
             res.send({statuscode:0})
         }
        }
+    } catch (error) {
+        res.status(500).send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -419,5 +422,17 @@ app.get("/api/orders", async (req, res) => {
         res.send({ statuscode: 0 })
     }
 })
+
+app.get("/api/myorder/:id", async (req, res) => {
+    const result = await checks.find({ UserId: req.params.id })
+    res.send({ statuscode: 1, data: result })
+})
+
+if (require.main === module) {
+    const port = process.env.PORT || 9000
+    app.listen(port, () => console.log(`connected to server on port ${port}`))
+}
+
+module.exports = app
 
 

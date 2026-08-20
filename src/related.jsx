@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import "./related.css"
+import { imageUrl } from "./imageUrl"
 
 export const Related =()=>{
     const[rel,setrel]=useState([])
@@ -15,7 +16,7 @@ export const Related =()=>{
     },[])
 
     const show= async()=>{
-        const result=await fetch(`http://localhost:9000/api/related/${idd}`,{
+        const result=await fetch(`/api/related/${idd}`,{
             method:"get"
             
         })
@@ -30,7 +31,7 @@ export const Related =()=>{
         }
     }
     const show2= async()=>{
-        const result=await fetch(`http://localhost:9000/api/getbrand/${idd}`,{
+        const result=await fetch(`/api/getbrand/${idd}`,{
             method:"get"
             
         })
@@ -51,7 +52,7 @@ return (
   {
     brand.map((a) =>
       <div className="col-12 col-sm-6 col-lg-3" key={a._id}>
-        <img src={`uploads/${a.Image}`} alt={a.Name} className="img-fluid" />
+        <img src={imageUrl(a.Image)} alt={a.Name} className="img-fluid" />
         <p>{a.Name}</p>
       </div>
     )
@@ -77,7 +78,7 @@ return (
                             <div className="card h-100 border-0 shadow-sm related-card">
                                 <div className="related-img-box bg-light">
                                     <img
-                                        src={`uploads/${a.Image}`}
+                                        src={imageUrl(a.Image)}
                                         className="card-img-top related-img"
                                         alt={a.Name}
                                     />

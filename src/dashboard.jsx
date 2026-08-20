@@ -1,6 +1,7 @@
 import { useState,useEffect, useContext } from "react"
 import { Context } from "./context"
 import { useNavigate } from "react-router-dom"
+import { imageUrl } from "./imageUrl"
 export const Dashboard=()=>{
     const [totalcategory,settotalcategory]=useState()
     const [totalbrand,settotalbrand]=useState()
@@ -10,7 +11,7 @@ export const Dashboard=()=>{
     const {utype,setutype}=useContext(Context)
     const navigate=useNavigate()
 const show = async () => {
-        const result = await fetch("http://localhost:9000/api/getcategory", {
+        const result = await fetch("/api/getcategory", {
             method: "get",
         })
         if (result) {
@@ -25,7 +26,7 @@ const show = async () => {
     }
 
    const show2=async()=>{
-    const result = await fetch("http://localhost:9000/api/getallbrand", {
+    const result = await fetch("/api/getallbrand", {
         method: "get",
     })
     if (result) {
@@ -40,7 +41,7 @@ const show = async () => {
    }
    
    const show3=async()=>{
-    const result = await fetch("http://localhost:9000/api/alluser", {
+    const result = await fetch("/api/alluser", {
         method: "get",
     })
     if (result) {
@@ -56,7 +57,7 @@ const show = async () => {
     }
    }
    const show4=async()=>{
-    const result = await fetch("http://localhost:9000/api/orders", {
+    const result = await fetch("/api/orders", {
         method: "get",
     })
     if (result) {
@@ -309,7 +310,7 @@ useEffect(()=>{
                                                 {order.Order.map((item, idx) => (
                                                     <div key={idx} className="d-flex align-items-center gap-3 mb-2">
                                                         <img
-                                                            src={`/uploads/${item.Img}`}
+                                                            src={imageUrl(item.Img)}
                                                             width="50"
                                                             height="50"
                                                             className="rounded"

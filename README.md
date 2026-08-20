@@ -1,4 +1,24 @@
-# React + Vite
+# Multicart deployment
+
+This repository deploys as one Vercel project: Vite serves the React app and
+`/api/*` is handled by the Express serverless function.
+
+Before deploying, create the variables in [`.env.example`](.env.example) in
+your Vercel project settings:
+
+- `MONGODB_URI` — a MongoDB Atlas connection string (do not use localhost).
+- `JWT_SECRET` — a long, private random value.
+- `BLOB_READ_WRITE_TOKEN` — the token for a Vercel Blob store; required for
+  category, brand, and product image uploads.
+
+In Vercel, set the project Root Directory to `Ecom` if you import this parent
+repository. The build command is `npm run build` and the output directory is
+`dist`; both are also defined in `vercel.json`.
+
+For local development, run the API from `backend` on port 9000 and `npm run dev`
+from this directory. Vite proxies `/api` requests to that API.
+
+## React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

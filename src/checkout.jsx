@@ -2,6 +2,7 @@ import { useState,useEffect } from "react"
 import {useContext} from "react"
 import { Context } from "./context"
 import { data, useLocation } from "react-router-dom"
+import { imageUrl } from "./imageUrl"
 
 
 export const Check =()=>{
@@ -29,7 +30,7 @@ export const Check =()=>{
         
         }))
     const data ={mail,fname,lname,address,country,city,state,zip,ph,payment,id,data:items}
-    const result = await fetch("http://localhost:9000/api/checkout",{
+    const result = await fetch("/api/checkout",{
         method:"post",
         body:JSON.stringify(data),
         headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -44,7 +45,7 @@ export const Check =()=>{
     }
 }
 const show = async () => {
-        const result = await fetch(`http://localhost:9000/api/cartget/${id}`, {
+        const result = await fetch(`/api/cartget/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -147,7 +148,7 @@ const show = async () => {
                         <div className="checkout-order-items">
                             {products.map((product) => (
                                 <article className="checkout-order-item" key={product.id}>
-                                    <div className="checkout-product-image"> <img src={`uploads/${product.Img}`} alt={product.Name}></img>
+                                    <div className="checkout-product-image"> <img src={imageUrl(product.Img)} alt={product.Name}></img>
 <span>1</span></div>
                                     <div><h3>{product.Name}</h3></div><strong>{product.Price}</strong>
                                 </article>

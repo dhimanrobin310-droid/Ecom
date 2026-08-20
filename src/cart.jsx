@@ -1,6 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "./context";
+import { imageUrl } from "./imageUrl";
 
 const currency = (value) => `$${Number(value || 0).toFixed(2)}`;
 const getQuantity = (value) => {
@@ -22,7 +23,7 @@ export const Cart = () => {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`http://localhost:9000/api/cartget/${id}`);
+        const response = await fetch(`/api/cartget/${id}`);
         if (!response.ok) throw new Error("Unable to load your cart.");
 
         const result = await response.json();
@@ -114,7 +115,7 @@ export const Cart = () => {
                 {items.map((item) => (
                   <article className="cart-product" key={item._id}>
                     <div className="cart-product-image-wrap">
-                      <img src={`/uploads/${item.Img}`} alt={item.Name} className="cart-product-image" />
+                      <img src={imageUrl(item.Img)} alt={item.Name} className="cart-product-image" />
                     </div>
                     <div className="cart-product-info">
                       <p className="cart-product-label">Selected item</p>

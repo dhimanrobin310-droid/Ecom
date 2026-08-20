@@ -8,7 +8,7 @@ const[email,setemail]=useState()
 
 const add = async(e)=>{
     e.preventDefault()
-  const result= await fetch("http://localhost:9000/api/register",{
+  const result= await fetch("/api/register",{
     method:"post",
     body:JSON.stringify({firstname,lastname,password,email}),
     headers:{"Content-type":"application/json;charset=UTF-8"}

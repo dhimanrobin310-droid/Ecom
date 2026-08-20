@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Context } from "./context"
+import { imageUrl } from "./imageUrl"
 
 
 export const Detail = () => {
@@ -39,7 +40,7 @@ export const Detail = () => {
     }, [ ])
  const go = async () => {
         const data = { value, img, name, price, salePrice, detail,id }
-        const result = await fetch(`http://localhost:9000/api/cartdata`, {
+        const result = await fetch(`/api/cartdata`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -59,7 +60,7 @@ export const Detail = () => {
     }
     
     const show = async () => {
-            const result = await fetch(`http://localhost:9000/api/getproduct/${prr}`, {
+            const result = await fetch(`/api/getproduct/${prr}`, {
                 method: "Get",
             })
           if(result){
@@ -78,7 +79,7 @@ export const Detail = () => {
     }
 
     const addwish = async()=>{
-      const result = await fetch("http://localhost:9000/api/wishlistdata",{
+      const result = await fetch("/api/wishlistdata",{
         method:"post",
         body:JSON.stringify({name,price,img,id}),
         headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -117,7 +118,7 @@ export const Detail = () => {
         style={{ backgroundColor: "#f8f9fa", minHeight: "500px" }}
       >
         <img
-          src={`uploads/${pro.Image}`}
+          src={imageUrl(pro.Image)}
           alt={pro.Name}
           className="img-fluid"
           style={{ maxHeight: "450px", maxWidth: "100%", objectFit: "contain" }}

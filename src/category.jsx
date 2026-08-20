@@ -16,7 +16,7 @@ export const Category = () => {
         const formdata = new FormData()
         formdata.append("name", name)
         formdata.append("pic", image)
-        const result = await fetch("http://localhost:9000/api/category", {
+        const result = await fetch("/api/category", {
             method: "post",
             body: formdata
         })
@@ -31,7 +31,7 @@ export const Category = () => {
         }
     }
     const show = async () => {
-        const result = await fetch("http://localhost:9000/api/getcategory", {
+        const result = await fetch("/api/getcategory", {
             method: "get",
         })
         if (result) {
@@ -51,7 +51,7 @@ export const Category = () => {
         formdata2.append("bname", bname)
         formdata2.append("pic", img2)
         formdata2.append("cat", category)
-        const result = await fetch("http://localhost:9000/api/addbrand", {
+        const result = await fetch("/api/addbrand", {
             method: "post",
             body: formdata2
         })

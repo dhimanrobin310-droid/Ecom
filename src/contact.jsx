@@ -9,7 +9,7 @@ export const Contact=()=>{
 
     const send=async(e)=>{
       e.preventDefault()
-      const result=await fetch("http://localhost:9000/api/contactus",{
+      const result=await fetch("/api/contactus",{
          method:"post",
          body:JSON.stringify({fullname,email,phone,subject,message}),
         headers :{"Content-type":"application/json;charset=UTF-8"}, 

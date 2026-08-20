@@ -26,7 +26,7 @@ export const Addproduct = () => {
 
 
     const show = async () => {
-        const result = await fetch(`http://localhost:9000/api/getbrand/${bid}`, {
+        const result = await fetch(`/api/getbrand/${bid}`, {
             method: "get",
         })
         if (result) {
@@ -41,7 +41,7 @@ export const Addproduct = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch("http://localhost:9000/api/getcategory", {
+        const result = await fetch("/api/getcategory", {
             method: "get",
         })
         if (result) {
@@ -66,7 +66,7 @@ export const Addproduct = () => {
         formdata.append("pic", img)
         formdata.append("saleprice", saleprice)
         formdata.append("sale", sale)
-        const result = await fetch("http://localhost:9000/api/addpro", {
+        const result = await fetch("/api/addpro", {
         method: "post",
         body: formdata,
 

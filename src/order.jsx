@@ -12,7 +12,7 @@ export const Order = () => {
 
     const show = async () => {
         try {
-            const result = await fetch(`http://localhost:9000/api/myorder/${id}`)
+            const result = await fetch(`/api/myorder/${id}`)
             const res = await result.json()
 
             if (res.statuscode === 1) {
