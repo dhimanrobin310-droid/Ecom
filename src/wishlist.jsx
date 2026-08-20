@@ -27,7 +27,9 @@ export const Wishlist = () => {
   const totalValue = '$450';
 
   return (
+   
     <section className="bg-light py-5">
+       <h1>Wishlist</h1>
       <div className="container">
         <div className="card border-0 bg-dark text-white shadow-lg rounded-4 mb-4 overflow-hidden">
           <div className="card-body p-4 p-md-5">
