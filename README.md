@@ -18,6 +18,13 @@ repository. The build command is `npm run build` and the output directory is
 For local development, run the API from `backend` on port 9000 and `npm run dev`
 from this directory. Vite proxies `/api` requests to that API.
 
+### Render backend
+
+To deploy the API independently on Render, set its Root Directory to `Ecom/backend`,
+use `npm install` as the build command, and `npm start` as the start command. Add
+`MONGODB_URI` and `JWT_SECRET` there too. `BLOB_READ_WRITE_TOKEN` is only needed
+when using Vercel Blob for image uploads.
+
 ## React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
