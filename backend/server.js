@@ -82,6 +82,10 @@ if (!key) {
 }
 
 const databaseUrl = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/Multikart"
+if (!process.env.MONGODB_URI) {
+    console.warn("⚠️ WARNING: MONGODB_URI environment variable is NOT set! Attempting localhost fallback: 127.0.0.1:27017 (this will fail on Render/cloud hosting until MONGODB_URI is configured).")
+}
+
 mongoose.connect(databaseUrl, {
     serverSelectionTimeoutMS: 5000,
 })
