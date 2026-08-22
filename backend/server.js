@@ -12,16 +12,36 @@ const app = express()
 const corsfront = [
     "https://ecom-alpha-beryl.vercel.app",
     "http://localhost:5173",
+    "http://localhost:5174",
     "http://localhost:3000",
     "http://localhost:9000"
 ]
 
-app.use(cors({
-    origin: corsfront,
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, Postman, curl, server-to-server)
+        if (!origin) return callback(null, true)
+        
+        // Allow Vercel, localhost, Render, and configured origins
+        if (
+            origin.startsWith("http://localhost:") ||
+            origin.startsWith("http://127.0.0.1:") ||
+            origin.endsWith(".vercel.app") ||
+            origin.endsWith(".onrender.com") ||
+            corsfront.includes(origin) ||
+            corsfront.includes(origin.replace(/\/$/, ""))
+        ) {
+            return callback(null, true)
+        }
+        return callback(null, true)
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}))
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"]
+}
+
+app.use(cors(corsOptions))
+app.options("*", cors(corsOptions))
 app.use(express.json())
 
 const key = process.env.JWT_SECRET || (process.env.NODE_ENV !== "production" ? "MYWEBSITE" : undefined)
