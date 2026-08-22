@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import "./related.css"
 import { imageUrl } from "./imageUrl"
+import { API_BASE_URL } from "./apiConfig"
 
 export const Related =()=>{
     const[rel,setrel]=useState([])
@@ -16,7 +17,7 @@ export const Related =()=>{
     },[])
 
     const show= async()=>{
-        const result=await fetch(`/api/related/${idd}`,{
+        const result=await fetch(`${API_BASE_URL}/api/related/${idd}`,{
             method:"get"
             
         })
@@ -31,7 +32,7 @@ export const Related =()=>{
         }
     }
     const show2= async()=>{
-        const result=await fetch(`/api/getbrand/${idd}`,{
+        const result=await fetch(`${API_BASE_URL}/api/getbrand/${idd}`,{
             method:"get"
             
         })

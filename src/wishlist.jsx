@@ -1,6 +1,7 @@
 import { useState,useContext,useEffect } from "react";
 import { Context } from "./context";
 import { imageUrl } from "./imageUrl";
+import { API_BASE_URL } from "./apiConfig";
 
 export const Wishlist = () => {
     
@@ -8,7 +9,7 @@ export const Wishlist = () => {
     const [mywishlist, setmywishlist] = useState([])
 
   const show = async () => {
-    const result = await fetch(`/api/wishlistget/${id}`, {
+    const result = await fetch(`${API_BASE_URL}/api/wishlistget/${id}`, {
       method: "get",
     })
     if (result) {

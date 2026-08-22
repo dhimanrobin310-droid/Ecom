@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { API_BASE_URL } from "./apiConfig"
 
 export const Register=()=>{
 const [firstname,setfirstname]=useState()
@@ -8,7 +9,7 @@ const[email,setemail]=useState()
 
 const add = async(e)=>{
     e.preventDefault()
-  const result= await fetch("/api/register",{
+  const result= await fetch(`${API_BASE_URL}/api/register`,{
     method:"post",
     body:JSON.stringify({firstname,lastname,password,email}),
     headers:{"Content-type":"application/json;charset=UTF-8"}

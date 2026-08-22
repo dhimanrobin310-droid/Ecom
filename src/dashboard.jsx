@@ -2,6 +2,7 @@ import { useState,useEffect, useContext } from "react"
 import { Context } from "./context"
 import { useNavigate } from "react-router-dom"
 import { imageUrl } from "./imageUrl"
+import { API_BASE_URL } from "./apiConfig"
 export const Dashboard=()=>{
     const [totalcategory,settotalcategory]=useState()
     const [totalbrand,settotalbrand]=useState()
@@ -11,7 +12,7 @@ export const Dashboard=()=>{
     const {utype,setutype}=useContext(Context)
     const navigate=useNavigate()
 const show = async () => {
-        const result = await fetch("/api/getcategory", {
+        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
             method: "get",
         })
         if (result) {
@@ -26,7 +27,7 @@ const show = async () => {
     }
 
    const show2=async()=>{
-    const result = await fetch("/api/getallbrand", {
+    const result = await fetch(`${API_BASE_URL}/api/getallbrand`, {
         method: "get",
     })
     if (result) {
@@ -41,7 +42,7 @@ const show = async () => {
    }
    
    const show3=async()=>{
-    const result = await fetch("/api/alluser", {
+    const result = await fetch(`${API_BASE_URL}/api/alluser`, {
         method: "get",
     })
     if (result) {
@@ -57,7 +58,7 @@ const show = async () => {
     }
    }
    const show4=async()=>{
-    const result = await fetch("/api/orders", {
+    const result = await fetch(`${API_BASE_URL}/api/orders`, {
         method: "get",
     })
     if (result) {
@@ -70,6 +71,7 @@ const show = async () => {
         }
     }
    }
+
 
    
 

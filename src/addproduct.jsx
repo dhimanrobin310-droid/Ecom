@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react"
-import{Context}from "./context"
+import { Context } from "./context"
 import { useNavigate } from "react-router-dom"
+import { API_BASE_URL } from "./apiConfig"
+
 export const Addproduct = () => {
 
     const [name, setname] = useState()
@@ -26,7 +28,7 @@ export const Addproduct = () => {
 
 
     const show = async () => {
-        const result = await fetch(`/api/getbrand/${bid}`, {
+        const result = await fetch(`${API_BASE_URL}/api/getbrand/${bid}`, {
             method: "get",
         })
         if (result) {
@@ -41,7 +43,7 @@ export const Addproduct = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch("/api/getcategory", {
+        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
             method: "get",
         })
         if (result) {
@@ -66,7 +68,7 @@ export const Addproduct = () => {
         formdata.append("pic", img)
         formdata.append("saleprice", saleprice)
         formdata.append("sale", sale)
-        const result = await fetch("/api/addpro", {
+        const result = await fetch(`${API_BASE_URL}/api/addpro`, {
         method: "post",
         body: formdata,
 

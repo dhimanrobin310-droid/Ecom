@@ -1,8 +1,9 @@
 import { useState,useEffect } from "react"
 import {useContext} from "react"
 import { Context } from "./context"
-import { data, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { imageUrl } from "./imageUrl"
+import { API_BASE_URL } from "./apiConfig"
 
 
 export const Check =()=>{
@@ -30,7 +31,7 @@ export const Check =()=>{
         
         }))
     const data ={mail,fname,lname,address,country,city,state,zip,ph,payment,id,data:items}
-    const result = await fetch("/api/checkout",{
+    const result = await fetch(`${API_BASE_URL}/api/checkout`,{
         method:"post",
         body:JSON.stringify(data),
         headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -45,7 +46,7 @@ export const Check =()=>{
     }
 }
 const show = async () => {
-        const result = await fetch(`/api/cartget/${id}`, {
+        const result = await fetch(`${API_BASE_URL}/api/cartget/${id}`, {
             method: "get"
         })
         if (result.ok) {

@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Context } from "./context"
 import { imageUrl } from "./imageUrl"
+import { API_BASE_URL } from "./apiConfig"
 
 
 export const Detail = () => {
@@ -40,7 +41,7 @@ export const Detail = () => {
     }, [ ])
  const go = async () => {
         const data = { value, img, name, price, salePrice, detail,id }
-        const result = await fetch(`/api/cartdata`, {
+        const result = await fetch(`${API_BASE_URL}/api/cartdata`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -60,7 +61,7 @@ export const Detail = () => {
     }
     
     const show = async () => {
-            const result = await fetch(`/api/getproduct/${prr}`, {
+            const result = await fetch(`${API_BASE_URL}/api/getproduct/${prr}`, {
                 method: "Get",
             })
           if(result){
@@ -79,7 +80,7 @@ export const Detail = () => {
     }
 
     const addwish = async()=>{
-      const result = await fetch("/api/wishlistdata",{
+      const result = await fetch(`${API_BASE_URL}/api/wishlistdata`,{
         method:"post",
         body:JSON.stringify({name,price,img,id}),
         headers: { "Content-type": "application/json;charset=UTF-8" }

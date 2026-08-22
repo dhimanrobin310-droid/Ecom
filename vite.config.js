@@ -10,7 +10,11 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:9000',
+      '/api': {
+        target: 'https://ecom-1hqx.onrender.com',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 })

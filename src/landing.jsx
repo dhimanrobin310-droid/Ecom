@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { imageUrl } from "./imageUrl"
+import { API_BASE_URL } from "./apiConfig"
 
 export const Landing = () => {
 
@@ -12,7 +13,7 @@ export const Landing = () => {
     },[])
 
     const showcat = async () => {
-        const result = await fetch("/api/getcategory", {
+        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
             method: "get",
         })
         if (result) {

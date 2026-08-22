@@ -9,7 +9,19 @@ const jwt = require("jsonwebtoken")
 
 const app = express()
 
-app.use(cors())
+const corsfront = [
+    "https://ecom-alpha-beryl.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:9000"
+]
+
+app.use(cors({
+    origin: corsfront,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}))
 app.use(express.json())
 
 const key = process.env.JWT_SECRET || (process.env.NODE_ENV !== "production" ? "MYWEBSITE" : undefined)

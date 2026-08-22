@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { API_BASE_URL } from "./apiConfig"
 
 export const Contact=()=>{
     const[fullname,setfullname]=useState()
@@ -9,7 +10,7 @@ export const Contact=()=>{
 
     const send=async(e)=>{
       e.preventDefault()
-      const result=await fetch("/api/contactus",{
+      const result=await fetch(`${API_BASE_URL}/api/contactus`,{
          method:"post",
          body:JSON.stringify({fullname,email,phone,subject,message}),
         headers :{"Content-type":"application/json;charset=UTF-8"}, 
@@ -40,6 +41,7 @@ export const Contact=()=>{
         </div>
     </div>
     
+
 
 
     
@@ -140,6 +142,7 @@ export const Contact=()=>{
         </div>
     </section>
     
+
 
 
     

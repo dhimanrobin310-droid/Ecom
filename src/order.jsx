@@ -1,5 +1,6 @@
 import {useState,useEffect,useContext} from "react"
 import { Context } from "./context"
+import { API_BASE_URL } from "./apiConfig"
 
 export const Order = () => {
     const [d, setd] = useState([])
@@ -12,7 +13,7 @@ export const Order = () => {
 
     const show = async () => {
         try {
-            const result = await fetch(`/api/myorder/${id}`)
+            const result = await fetch(`${API_BASE_URL}/api/myorder/${id}`)
             const res = await result.json()
 
             if (res.statuscode === 1) {

@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "./context";
 import { imageUrl } from "./imageUrl";
+import { API_BASE_URL } from "./apiConfig";
 
 const currency = (value) => `$${Number(value || 0).toFixed(2)}`;
 const getQuantity = (value) => {
@@ -23,7 +24,7 @@ export const Cart = () => {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/cartget/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/cartget/${id}`);
         if (!response.ok) throw new Error("Unable to load your cart.");
 
         const result = await response.json();

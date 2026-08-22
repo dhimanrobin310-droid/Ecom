@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
-import { data, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { Context } from "./context"
+import { API_BASE_URL } from "./apiConfig"
 
 export const Login=()=>{
 
@@ -14,7 +15,7 @@ export const Login=()=>{
      
         e.preventDefault()
         const data={email,password}
-        const result=await fetch("/api/login",{
+        const result=await fetch(`${API_BASE_URL}/api/login`,{
             method:"post",
             body:JSON.stringify(data),
             headers:{"Content-Type":"application/json"}
@@ -48,6 +49,7 @@ export const Login=()=>{
         </div>
     </div>
     
+
 
 
     
