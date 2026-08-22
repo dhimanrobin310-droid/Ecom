@@ -41,8 +41,11 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-app.options("*", cors(corsOptions))
 app.use(express.json())
+
+app.get("/", (req, res) => {
+    res.send({ status: "ok", message: "Multikart backend is running" })
+})
 
 const key = process.env.JWT_SECRET || (process.env.NODE_ENV !== "production" ? "MYWEBSITE" : undefined)
 if (!key) {
