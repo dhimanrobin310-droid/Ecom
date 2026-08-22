@@ -37,6 +37,25 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+
+// Explicit CORS headers middleware to guarantee headers are set on all responses (including errors)
+app.use((req, res, next) => {
+    const origin = req.headers.origin
+    if (origin) {
+        res.setHeader("Access-Control-Allow-Origin", origin)
+        res.setHeader("Access-Control-Allow-Credentials", "true")
+    } else {
+        res.setHeader("Access-Control-Allow-Origin", "*")
+    }
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin")
+    
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204)
+    }
+    next()
+})
+
 app.use(express.json())
 
 app.get("/", (req, res) => {
@@ -101,7 +120,7 @@ app.post("/api/register", async (req, res) => {
         }
     } catch (error) {
         console.error("Register error:", error)
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -124,7 +143,7 @@ app.post("/api/login", async (req, res) => {
         }
     } catch (error) {
         console.error("Login error:", error)
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -137,7 +156,7 @@ app.get("/api/alluser", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -167,7 +186,7 @@ app.post("/api/contactus", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -208,7 +227,7 @@ app.post("/api/category", upload.single("pic"), async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -221,7 +240,7 @@ app.get("/api/getcategory", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -247,7 +266,7 @@ app.post("/api/addbrand", upload.single("pic"), async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -260,7 +279,7 @@ app.get("/api/getallbrand", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -273,7 +292,7 @@ app.get("/api/getbrand/:id", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -310,7 +329,7 @@ app.post("/api/addpro", upload.single("pic"), async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -323,7 +342,7 @@ app.get("/api/getproducts", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -336,7 +355,7 @@ app.get("/api/getproduct/:id", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -349,7 +368,7 @@ app.get("/api/related/:id", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -382,7 +401,7 @@ app.post("/api/cartdata", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -395,7 +414,7 @@ app.get("/api/cartget/:id", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -424,7 +443,7 @@ app.post("/api/wishlistdata", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -437,7 +456,7 @@ app.get("/api/wishlistget/:id", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -482,7 +501,7 @@ app.post("/api/checkout", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -495,7 +514,7 @@ app.get("/api/orders", async (req, res) => {
             res.send({ statuscode: 0 })
         }
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -504,7 +523,7 @@ app.get("/api/myorder/:id", async (req, res) => {
         const result = await checks.find({ UserId: req.params.id })
         res.send({ statuscode: 1, data: result })
     } catch (error) {
-        res.status(500).send({ statuscode: 0, message: error.message })
+        res.send({ statuscode: 0, message: error.message })
     }
 })
 
@@ -512,7 +531,7 @@ app.get("/api/myorder/:id", async (req, res) => {
 app.use((err, req, res, next) => {
     console.error("Unhandled server error:", err)
     if (!res.headersSent) {
-        res.status(500).send({ statuscode: 0, message: err.message || "Internal server error" })
+        res.send({ statuscode: 0, message: err.message || "Internal server error" })
     }
 })
 
