@@ -66,7 +66,7 @@ app.use(express.json())
 
 let cachedPromise = null
 let lastDbError = null
-
+var databaseUrl = "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
 async function connectDB() {
     if (mongoose.connection.readyState === 1) {
         return mongoose.connection
@@ -75,7 +75,7 @@ async function connectDB() {
         return cachedPromise
     }
 
-    const databaseUrl = "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
+    // const databaseUrl = "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
     if (!databaseUrl) {
         const msg = "MONGODB_URI environment variable is not configured. Please add MONGODB_URI in Render dashboard settings."
         lastDbError = msg
