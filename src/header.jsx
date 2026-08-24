@@ -14,8 +14,8 @@ export const Header = () => {
         <div className="header-top-left">Free shipping on orders over $50</div>
         <div className="header-top-right">
           <a href="tel:1234567890">Call: 123-456-7890</a>
-          <a href="#!">Wishlist</a>
-          <a href="/login">Login</a>
+          <Link to="/">Wishlist</Link>
+          <Link to="/">Login</Link>
         </div>
       </div>
 
