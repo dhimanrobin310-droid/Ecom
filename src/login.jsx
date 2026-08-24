@@ -78,7 +78,7 @@ export const Login=()=>{
                         <h6 class="title-font">Create A Account</h6>
                         <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be
                             able to order from our shop. To start shopping click register.</p>
-                        <a href="register.html" class="btn btn-solid">Create an Account</a>
+                        <Link to="/register" class="btn btn-solid">Create an Account</Link>
                     </div>
                 </div>
             </div>
