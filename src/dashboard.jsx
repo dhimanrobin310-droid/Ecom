@@ -12,64 +12,59 @@ export const Dashboard=()=>{
     const {utype,setutype}=useContext(Context)
     const navigate=useNavigate()
 const show = async () => {
-        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
-            method: "get",
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                settotalcategory(res.data.length)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getcategory`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && res.data) {
+                    settotalcategory(res.data.length)
+                }
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Dashboard getcategory error:", err)
         }
     }
 
    const show2=async()=>{
-    const result = await fetch(`${API_BASE_URL}/api/getallbrand`, {
-        method: "get",
-    })
-    if (result) {
-        const res = await result.json()
-        if (res.statuscode === 1) {
-            settotalbrand(res.data.length)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getallbrand`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && res.data) {
+                    settotalbrand(res.data.length)
+                }
+            }
+        } catch (err) {
+            console.error("Dashboard getallbrand error:", err)
         }
-        else {
-            alert("error")
-        }
-    }
    }
    
    const show3=async()=>{
-    const result = await fetch(`${API_BASE_URL}/api/alluser`, {
-        method: "get",
-    })
-    if (result) {
-        const res = await result.json()
-        if (res.statuscode === 1) {
-         
-            setusers(res.data.length)
-            settotalusers(res.data)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/alluser`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && res.data) {
+                    setusers(res.data.length)
+                    settotalusers(res.data)
+                }
+            }
+        } catch (err) {
+            console.error("Dashboard alluser error:", err)
         }
-        else {
-            alert("error")
-        }
-    }
    }
    const show4=async()=>{
-    const result = await fetch(`${API_BASE_URL}/api/orders`, {
-        method: "get",
-    })
-    if (result) {
-        const res = await result.json()
-        if (res.statuscode === 1) {
-            settotalorders(res.data)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/orders`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && res.data) {
+                    settotalorders(res.data)
+                }
+            }
+        } catch (err) {
+            console.error("Dashboard orders error:", err)
         }
-        else {
-            alert("error")
-        }
-    }
    }
 
 

@@ -28,60 +28,58 @@ export const Addproduct = () => {
 
 
     const show = async () => {
-        const result = await fetch(`${API_BASE_URL}/api/getbrand/${bid}`, {
-            method: "get",
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-
-                setbrand2(res.data)
+        if (!bid) return
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getbrand/${bid}`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setbrand2(res.data || [])
+                }
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Error loading brands:", err)
         }
     }
     const show2 = async () => {
-        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
-            method: "get",
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setcat(res.data)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getcategory`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setcat(res.data || [])
+                }
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Error loading categories:", err)
         }
     }
 
     const add = async (e) => {
         e.preventDefault()
-        const formdata = new FormData()
-        formdata.append("cate", cate)
-        formdata.append("brand", brand)
-        formdata.append("name", name)
-        formdata.append("price", price)
-        formdata.append("detail", detail)
-        formdata.append("pic", img)
-        formdata.append("saleprice", saleprice)
-        formdata.append("sale", sale)
-        const result = await fetch(`${API_BASE_URL}/api/addpro`, {
-        method: "post",
-        body: formdata,
-
-
-        })
-        if (result) {
+        try {
+            const formdata = new FormData()
+            formdata.append("cate", cate)
+            formdata.append("brand", brand)
+            formdata.append("name", name)
+            formdata.append("price", price)
+            formdata.append("detail", detail)
+            formdata.append("pic", img)
+            formdata.append("saleprice", saleprice)
+            formdata.append("sale", sale)
+            const result = await fetch(`${API_BASE_URL}/api/addpro`, {
+                method: "post",
+                body: formdata,
+            })
             const res = await result.json()
             if (res.statuscode === 1) {
-                alert("added")
+                alert("Product added successfully!")
+            } else {
+                alert(res.message || "Failed to add product.")
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Add product error:", err)
+            alert("Network error: Unable to connect to server.")
         }
     }
 

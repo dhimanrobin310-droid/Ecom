@@ -30,35 +30,39 @@ export const Check =()=>{
             Img:item.Img,
         
         }))
-    const data ={mail,fname,lname,address,country,city,state,zip,ph,payment,id,data:items}
-    const result = await fetch(`${API_BASE_URL}/api/checkout`,{
-        method:"post",
-        body:JSON.stringify(data),
-        headers: { "Content-type": "application/json;charset=UTF-8" }
-
-    })
-    const res = await result.json()
-    if(res.statuscode===1){
-        alert("checkout successfull")
-    }
-    else{
-        alert("checkout failed")
+    try {
+        const data ={mail,fname,lname,address,country,city,state,zip,ph,payment,id,data:items}
+        const result = await fetch(`${API_BASE_URL}/api/checkout`,{
+            method:"post",
+            body:JSON.stringify(data),
+            headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        const res = await result.json()
+        if(res.statuscode===1){
+            alert("Checkout successful! Your order has been placed.")
+        }
+        else{
+            alert(res.message || "Checkout failed. Please try again.")
+        }
+    } catch (err) {
+        console.error("Checkout error:", err)
+        alert("Network error: Unable to process checkout.")
     }
 }
 const show = async () => {
-        const result = await fetch(`${API_BASE_URL}/api/cartget/${id}`, {
-            method: "get"
-        })
+    if (!id) return
+    try {
+        const result = await fetch(`${API_BASE_URL}/api/cartget/${id}`)
         if (result.ok) {
             const res = await result.json()
             if (res.statuscode === 1) {
-                setproducts(res.Data)
-            }
-            else {
-                alert("error")
+                setproducts(res.Data || [])
             }
         }
+    } catch (err) {
+        console.error("Error loading cart for checkout:", err)
     }
+}
     useEffect(()=>{
         show()
     },[])

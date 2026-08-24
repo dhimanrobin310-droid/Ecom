@@ -13,18 +13,18 @@ export const Landing = () => {
     },[])
 
     const showcat = async () => {
-        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
-            method: "get",
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                
-                setcat(res.data)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
+                method: "get",
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setcat(res.data || [])
+                }
             }
-            else {
-                alert("Error")
-            }
+        } catch (err) {
+            console.error("Failed to load categories:", err)
         }
     }
 

@@ -14,56 +14,59 @@ export const Category = () => {
 
     const addcategory = async (e) => {
         e.preventDefault()
-        const formdata = new FormData()
-        formdata.append("name", name)
-        formdata.append("pic", image)
-        const result = await fetch(`${API_BASE_URL}/api/category`, {
-            method: "post",
-            body: formdata
-        })
-        if (result) {
+        try {
+            const formdata = new FormData()
+            formdata.append("name", name)
+            formdata.append("pic", image)
+            const result = await fetch(`${API_BASE_URL}/api/category`, {
+                method: "post",
+                body: formdata
+            })
             const res = await result.json()
             if (res.statuscode === 1) {
-                alert("added")
+                alert("Category added successfully!")
+                show()
+            } else {
+                alert(res.message || "Failed to add category.")
             }
-            else {
-                alert("not now")
-            }
+        } catch (err) {
+            console.error("Add category error:", err)
+            alert("Network error: Unable to connect to server.")
         }
     }
     const show = async () => {
-        const result = await fetch(`${API_BASE_URL}/api/getcategory`, {
-            method: "get",
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-               
-                setcat(res.data)
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getcategory`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setcat(res.data || [])
+                }
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Error loading categories:", err)
         }
     }
     const addbrand = async (e) => {
         e.preventDefault()
-        const formdata2 = new FormData()
-        formdata2.append("bname", bname)
-        formdata2.append("pic", img2)
-        formdata2.append("cat", category)
-        const result = await fetch(`${API_BASE_URL}/api/addbrand`, {
-            method: "post",
-            body: formdata2
-        })
-        if (result) {
+        try {
+            const formdata2 = new FormData()
+            formdata2.append("bname", bname)
+            formdata2.append("pic", img2)
+            formdata2.append("cat", category)
+            const result = await fetch(`${API_BASE_URL}/api/addbrand`, {
+                method: "post",
+                body: formdata2
+            })
             const res = await result.json()
             if (res.statuscode === 1) {
-                alert("added")
+                alert("Brand added successfully!")
+            } else {
+                alert(res.message || "Failed to add brand.")
             }
-            else {
-                alert("not added")
-            }
+        } catch (err) {
+            console.error("Add brand error:", err)
+            alert("Network error: Unable to connect to server.")
         }
     }
     return (

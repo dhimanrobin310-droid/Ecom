@@ -10,19 +10,25 @@ export const Contact=()=>{
 
     const send=async(e)=>{
       e.preventDefault()
-      const result=await fetch(`${API_BASE_URL}/api/contactus`,{
-         method:"post",
-         body:JSON.stringify({fullname,email,phone,subject,message}),
-        headers :{"Content-type":"application/json;charset=UTF-8"}, 
-      })
-      if(result){
-        const res =await result.json()
-            if(res.statuscode===1){
-            alert("Message sent")
-            }
-        else{
-            alert("error")
-        }
+      if (!fullname || !email || !message) {
+          alert("Please fill in required fields (Full name, Email, Message).")
+          return
+      }
+      try {
+          const result=await fetch(`${API_BASE_URL}/api/contactus`,{
+             method:"post",
+             body:JSON.stringify({fullname,email,phone,subject,message}),
+             headers :{"Content-Type":"application/json;charset=UTF-8"}, 
+          })
+          const res =await result.json()
+          if(res.statuscode===1){
+              alert("Message sent successfully!")
+          } else {
+              alert(res.message || "Failed to send message.")
+          }
+      } catch (err) {
+          console.error("Contact us error:", err)
+          alert("Network error: Unable to send message.")
       }
     }
     return(

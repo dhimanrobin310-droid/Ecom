@@ -9,16 +9,17 @@ export const Wishlist = () => {
     const [mywishlist, setmywishlist] = useState([])
 
   const show = async () => {
-    const result = await fetch(`${API_BASE_URL}/api/wishlistget/${id}`, {
-      method: "get",
-    })
-    if (result) {
-      const res = await result.json()
-      if (res.statuscode === 1) {
-        setmywishlist(res.Data)
-      } else {
-        alert("Wishlist not found.")
+    if (!id) return
+    try {
+      const result = await fetch(`${API_BASE_URL}/api/wishlistget/${id}`)
+      if (result.ok) {
+        const res = await result.json()
+        if (res.statuscode === 1) {
+          setmywishlist(res.Data || [])
+        }
       }
+    } catch (err) {
+      console.error("Error loading wishlist:", err)
     }
   }
 

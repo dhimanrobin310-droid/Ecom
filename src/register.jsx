@@ -1,28 +1,35 @@
-import { useState } from "react"
-import { API_BASE_URL } from "./apiConfig"
+import { useNavigate } from "react-router-dom"
 
 export const Register=()=>{
-const [firstname,setfirstname]=useState()
-const [lastname,setlastname]=useState()
-const [password,setpassword]=useState()
-const[email,setemail]=useState()
+const [firstname,setfirstname]=useState("")
+const [lastname,setlastname]=useState("")
+const [password,setpassword]=useState("")
+const[email,setemail]=useState("")
+const navigate = useNavigate()
 
 const add = async(e)=>{
     e.preventDefault()
-  const result= await fetch(`${API_BASE_URL}/api/register`,{
-    method:"post",
-    body:JSON.stringify({firstname,lastname,password,email}),
-    headers:{"Content-type":"application/json;charset=UTF-8"}
-  })  
-  if(result){
-    const res=await result.json()
-    if(res.statuscode===1){
-        alert("added")
+    if (!firstname || !lastname || !email || !password) {
+        alert("Please fill in all fields.")
+        return
     }
-    else{
-        alert("error")
+    try {
+        const result = await fetch(`${API_BASE_URL}/api/register`,{
+            method: "post",
+            body: JSON.stringify({firstname, lastname, password, email}),
+            headers: {"Content-Type": "application/json;charset=UTF-8"}
+        })  
+        const res = await result.json()
+        if (res.statuscode === 1) {
+            alert("Account created successfully! Please login.")
+            navigate("/login")
+        } else {
+            alert(res.message || "Failed to create account.")
+        }
+    } catch (err) {
+        console.error("Registration error:", err)
+        alert("Network error: Unable to connect to server. Please check your backend connection.")
     }
-  }
 }
 
 

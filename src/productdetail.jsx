@@ -40,61 +40,63 @@ export const Detail = () => {
       
     }, [ ])
  const go = async () => {
-        const data = { value, img, name, price, salePrice, detail,id }
-        const result = await fetch(`${API_BASE_URL}/api/cartdata`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
+        try {
+            const data = { value, img, name, price, salePrice, detail, id }
+            const result = await fetch(`${API_BASE_URL}/api/cartdata`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json;charset=UTF-8" }
+            })
             const res = await result.json()
-           
-             if (res.statuscode === 1) {
+            if (res.statuscode === 1) {
                 alert("Product added to cart successfully.")
-              navigate(`/cart`)
-
+                navigate(`/cart`)
+            } else {
+                alert(res.message || "Failed to add product to cart.")
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Cart error:", err)
+            alert("Network error: Unable to add product to cart.")
         }
     }
     
     const show = async () => {
-            const result = await fetch(`${API_BASE_URL}/api/getproduct/${prr}`, {
-                method: "Get",
-            })
-          if(result){
-              const res = await result.json()
-            if (res.statuscode === 1) {
-                setpro(res.data)
-                setname(res.data.Name)
-                setprice(res.data.Price)
-                setSalePrice(res.data.SalePrice) 
-                setDetail(res.data.Detail)
-                setimg(res.data.Image)
-            } else {
-                alert("Product not found.")
+        if (!prr) return
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/getproduct/${prr}`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && res.data) {
+                    setpro(res.data)
+                    setname(res.data.Name)
+                    setprice(res.data.Price)
+                    setSalePrice(res.data.SalePrice) 
+                    setDetail(res.data.Detail)
+                    setimg(res.data.Image)
+                }
             }
-          }
+        } catch (err) {
+            console.error("Error loading product:", err)
+        }
     }
 
     const addwish = async()=>{
-      const result = await fetch(`${API_BASE_URL}/api/wishlistdata`,{
-        method:"post",
-        body:JSON.stringify({name,price,img,id}),
-        headers: { "Content-type": "application/json;charset=UTF-8" }
-      })
-      if(result.ok){
-        const res = await result.json()
-        if(res.statuscode===1){
-          alert("Product added to wishlist successfully.")
-        
+        try {
+            const result = await fetch(`${API_BASE_URL}/api/wishlistdata`,{
+                method: "post",
+                body: JSON.stringify({name, price, img, id}),
+                headers: { "Content-Type": "application/json;charset=UTF-8" }
+            })
+            const res = await result.json()
+            if (res.statuscode === 1) {
+                alert("Product added to wishlist successfully.")
+            } else {
+                alert(res.message || "Failed to add to wishlist.")
+            }
+        } catch (err) {
+            console.error("Wishlist error:", err)
+            alert("Network error: Unable to add to wishlist.")
         }
-        else{
-          alert("error")
-        }
-      }
     }
 
     // const decreaseQuantity = () => {

@@ -12,25 +12,33 @@ export const Login=()=>{
 
 
     const login=async(e)=>{ 
-     
         e.preventDefault()
-        const data={email,password}
-        const result=await fetch(`${API_BASE_URL}/api/login`,{
-            method:"post",
-            body:JSON.stringify(data),
-            headers:{"Content-Type":"application/json"}
-        })
-        if(result){
+        if (!email || !password) {
+            alert("Please enter both email and password.")
+            return
+        }
+        try {
+            const data={email,password}
+            const result=await fetch(`${API_BASE_URL}/api/login`,{
+                method:"post",
+                body:JSON.stringify(data),
+                headers:{"Content-Type":"application/json"}
+            })
             const res=await result.json()
             if(res.statuscode===1){
-                alert("login Successfully")
+                alert("Login successful!")
                 localStorage.setItem("data",JSON.stringify(res.jwtoken))
-                   alert(utype)
+                if (res.data && res.data.UserType) {
+                    setutype(res.data.UserType)
+                }
                 navigate("/")
             }
             else{
-                alert("not")
+                alert(res.message || "Invalid email or password.")
             }
+        } catch (err) {
+            console.error("Login error:", err)
+            alert("Network error: Unable to connect to server. Please check your backend connection.")
         }
     }
     return(

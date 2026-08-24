@@ -17,33 +17,31 @@ export const Related =()=>{
     },[])
 
     const show= async()=>{
-        const result=await fetch(`${API_BASE_URL}/api/related/${idd}`,{
-            method:"get"
-            
-        })
-        if(result){
-            const res=await result.json()
-            if(res.statuscode===1){
-                setrel(res.Data)
+        if (!idd) return
+        try {
+            const result=await fetch(`${API_BASE_URL}/api/related/${idd}`)
+            if (result.ok) {
+                const res=await result.json()
+                if(res.statuscode===1){
+                    setrel(res.Data || [])
+                }
             }
-            else{
-                alert("nothing to show")
-            }
+        } catch (err) {
+            console.error("Related products load error:", err)
         }
     }
     const show2= async()=>{
-        const result=await fetch(`${API_BASE_URL}/api/getbrand/${idd}`,{
-            method:"get"
-            
-        })
-        if(result){
-            const res=await result.json()
-            if(res.statuscode===1){
-                setbrand(res.data)
+        if (!idd) return
+        try {
+            const result=await fetch(`${API_BASE_URL}/api/getbrand/${idd}`)
+            if (result.ok) {
+                const res=await result.json()
+                if(res.statuscode===1){
+                    setbrand(res.data || [])
+                }
             }
-            else{
-                alert("nothing to show")
-            }
+        } catch (err) {
+            console.error("Related brands load error:", err)
         }
     }
 

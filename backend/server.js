@@ -1,3 +1,9 @@
+const path = require("path")
+try {
+    require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
+    require("dotenv").config()
+} catch (_) {}
+
 const mongoose = require("mongoose")
 const cors = require("cors")
 const express = require("express")
@@ -58,43 +64,127 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 
+let cachedPromise = null
+let lastDbError = null
+
+async function connectDB() {
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection
+    }
+    if (cachedPromise) {
+        return cachedPromise
+    }
+
+    const databaseUrl = process.env.MONGODB_URI
+    if (!databaseUrl) {
+        const msg = "MONGODB_URI environment variable is not configured. Please add MONGODB_URI in Render dashboard settings."
+        lastDbError = msg
+        throw new Error(msg)
+    }
+
+    cachedPromise = mongoose.connect(databaseUrl, {
+        serverSelectionTimeoutMS: 5000,
+        bufferCommands: false,
+    }).then((conn) => {
+        lastDbError = null
+        console.log("Connected to MongoDB successfully")
+        return conn
+    }).catch((err) => {
+        cachedPromise = null
+        lastDbError = err.message
+        console.error("MongoDB connection error:", err.message)
+        throw err
+    })
+
+    return cachedPromise
+}
+
+// Initiate connection if MONGODB_URI is provided
+if (process.env.MONGODB_URI) {
+    connectDB().catch(() => {})
+} else {
+    console.warn("⚠️ WARNING: MONGODB_URI environment variable is NOT set! Please configure MONGODB_URI in your Render / hosting environment variables.")
+}
+
+// Health and root diagnostics
 app.get("/", (req, res) => {
-    res.send({ status: "ok", message: "Multikart backend is running" })
+    res.send({
+        status: "ok",
+        message: "Multikart backend is running",
+        dbStatus: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+        hasMongoUri: !!process.env.MONGODB_URI
+    })
 })
 
 app.get("/api/health", (req, res) => {
-    res.send({ status: "ok" })
+    res.send({
+        status: "ok",
+        dbConnected: mongoose.connection.readyState === 1
+    })
 })
 
 app.get("/api/db-status", (req, res) => {
     const states = ["disconnected", "connected", "connecting", "disconnecting"]
     const state = mongoose.connection.readyState
+    
+    let maskedUri = null
+    if (process.env.MONGODB_URI) {
+        try {
+            maskedUri = process.env.MONGODB_URI.replace(/mongodb(\+srv)?:\/\/([^:]+):([^@]+)@/, "mongodb$1://$2:****@")
+        } catch (_) {
+            maskedUri = "configured (hidden)"
+        }
+    }
+
     res.send({
         status: states[state] || "unknown",
+        readyState: state,
         connected: state === 1,
-        hasMongoUri: !!process.env.MONGODB_URI
+        hasMongoUri: !!process.env.MONGODB_URI,
+        mongoUri: maskedUri,
+        hasJwtSecret: !!process.env.JWT_SECRET,
+        hasBlobToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+        lastError: lastDbError,
+        help: !process.env.MONGODB_URI 
+            ? "Action required: Set MONGODB_URI in Render Dashboard (Web Service -> Environment) with your MongoDB Atlas connection string."
+            : (state !== 1 ? "Action required: Check MongoDB Atlas Network Access and ensure IP '0.0.0.0/0' (Allow Access from Anywhere) is added." : "Database is connected and ready.")
     })
 })
 
-const key = process.env.JWT_SECRET || (process.env.NODE_ENV !== "production" ? "MYWEBSITE" : undefined)
-if (!key) {
-    console.warn("JWT_SECRET is not set. Authentication requests will fail until it is configured.")
-}
+// Database readiness check middleware for all /api database routes
+app.use("/api", async (req, res, next) => {
+    if (req.path === "/health" || req.path === "/db-status" || req.path === "/" || req.method === "OPTIONS") {
+        return next()
+    }
 
-const databaseUrl = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/Multikart"
-if (!process.env.MONGODB_URI) {
-    console.warn("⚠️ WARNING: MONGODB_URI environment variable is NOT set! Attempting localhost fallback: 127.0.0.1:27017 (this will fail on Render/cloud hosting until MONGODB_URI is configured).")
-}
+    if (!process.env.MONGODB_URI) {
+        return res.status(503).send({
+            statuscode: 0,
+            message: "Database error: MONGODB_URI is not set in Render environment variables. Please configure MONGODB_URI in Render dashboard.",
+            errorType: "MISSING_MONGODB_URI"
+        })
+    }
 
-mongoose.connect(databaseUrl, {
-    serverSelectionTimeoutMS: 5000,
+    if (mongoose.connection.readyState !== 1) {
+        try {
+            await connectDB()
+            next()
+        } catch (err) {
+            return res.status(503).send({
+                statuscode: 0,
+                message: `Database connection failed: ${err.message}. Please verify MongoDB Atlas IP whitelist (allow 0.0.0.0/0) and credentials.`,
+                errorType: "DB_CONNECTION_ERROR"
+            })
+        }
+    } else {
+        next()
+    }
 })
-    .then(() => {
-        console.log("Connected to MongoDB successfully")
-    })
-    .catch((err) => {
-        console.error("MongoDB connection error:", err.message)
-    })
+
+const key = process.env.JWT_SECRET || "MYWEBSITE_DEFAULT_SECRET_KEY_12345"
+if (!process.env.JWT_SECRET) {
+    console.warn("JWT_SECRET is not set. Using default secret.")
+}
 
 const registerschema = mongoose.Schema({
     FirstName: String,
