@@ -75,7 +75,7 @@ async function connectDB() {
         return cachedPromise
     }
 
-    const databaseUrl = process.env.MONGODB_URI
+    const databaseUrl = "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
     if (!databaseUrl) {
         const msg = "MONGODB_URI environment variable is not configured. Please add MONGODB_URI in Render dashboard settings."
         lastDbError = msg
