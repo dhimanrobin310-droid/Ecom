@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Context } from "./context"
 import { API_BASE_URL } from "./apiConfig"
-
+import { Link } from "react-router-dom"
 export const Login=()=>{
 
     const [email,setemail]=useState("")
