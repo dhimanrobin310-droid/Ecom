@@ -100,7 +100,7 @@ async function connectDB() {
 }
 
 // Initiate connection if MONGODB_URI is provided
-if (process.env.MONGODB_URI) {
+if (databaseUrl) {
     connectDB().catch(() => {})
 } else {
     console.warn("⚠️ WARNING: MONGODB_URI environment variable is NOT set! Please configure MONGODB_URI in your Render / hosting environment variables.")
@@ -112,7 +112,7 @@ app.get("/", (req, res) => {
         status: "ok",
         message: "Multikart backend is running",
         dbStatus: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
-        hasMongoUri: !!process.env.MONGODB_URI
+        hasMongoUri: !!databaseUrl
     })
 })
 
@@ -128,9 +128,9 @@ app.get("/api/db-status", (req, res) => {
     const state = mongoose.connection.readyState
     
     let maskedUri = null
-    if (process.env.MONGODB_URI) {
+    if (databaseUrl) {
         try {
-            maskedUri = process.env.MONGODB_URI.replace(/mongodb(\+srv)?:\/\/([^:]+):([^@]+)@/, "mongodb$1://$2:****@")
+            maskedUri = databaseUrl.replace(/mongodb(\+srv)?:\/\/([^:]+):([^@]+)@/, "mongodb$1://$2:****@")
         } catch (_) {
             maskedUri = "configured (hidden)"
         }
@@ -140,12 +140,12 @@ app.get("/api/db-status", (req, res) => {
         status: states[state] || "unknown",
         readyState: state,
         connected: state === 1,
-        hasMongoUri: !!process.env.MONGODB_URI,
+        hasMongoUri: !!databaseUrl,
         mongoUri: maskedUri,
         hasJwtSecret: !!process.env.JWT_SECRET,
         hasBlobToken: !!process.env.BLOB_READ_WRITE_TOKEN,
         lastError: lastDbError,
-        help: !process.env.MONGODB_URI 
+        help: !databaseUrl 
             ? "Action required: Set MONGODB_URI in Render Dashboard (Web Service -> Environment) with your MongoDB Atlas connection string."
             : (state !== 1 ? "Action required: Check MongoDB Atlas Network Access and ensure IP '0.0.0.0/0' (Allow Access from Anywhere) is added." : "Database is connected and ready.")
     })
@@ -157,7 +157,7 @@ app.use("/api", async (req, res, next) => {
         return next()
     }
 
-    if (!process.env.MONGODB_URI) {
+    if (!databaseUrl) {
         return res.status(503).send({
             statuscode: 0,
             message: "Database error: MONGODB_URI is not set in Render environment variables. Please configure MONGODB_URI in Render dashboard.",
