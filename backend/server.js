@@ -1,4 +1,11 @@
 const path = require("path")
+const dns = require("dns")
+
+// Fix SRV DNS lookup issues on Windows / Node 18+ for mongodb+srv://
+try {
+    dns.setServers(["8.8.8.8", "8.8.4.4"])
+} catch (_) {}
+
 try {
     require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
     require("dotenv").config()
@@ -66,7 +73,9 @@ app.use(express.json())
 
 let cachedPromise = null
 let lastDbError = null
-var databaseUrl = "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
+
+const databaseUrl = process.env.MONGODB_URI || "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
+
 async function connectDB() {
     if (mongoose.connection.readyState === 1) {
         return mongoose.connection
@@ -75,16 +84,8 @@ async function connectDB() {
         return cachedPromise
     }
 
-    // const databaseUrl = "mongodb+srv://dhimanrobin310_db_user:tJpQBivyvE5OCkTL@cluster0.ggwyxlr.mongodb.net/ecom"
-    if (!databaseUrl) {
-        const msg = "MONGODB_URI environment variable is not configured. Please add MONGODB_URI in Render dashboard settings."
-        lastDbError = msg
-        throw new Error(msg)
-    }
-
     cachedPromise = mongoose.connect(databaseUrl, {
-        serverSelectionTimeoutMS: 5000,
-        bufferCommands: false,
+        serverSelectionTimeoutMS: 10000,
     }).then((conn) => {
         lastDbError = null
         console.log("Connected to MongoDB successfully")
@@ -99,12 +100,10 @@ async function connectDB() {
     return cachedPromise
 }
 
-// Initiate connection if MONGODB_URI is provided
-if (databaseUrl) {
-    connectDB().catch(() => {})
-} else {
-    console.warn("⚠️ WARNING: MONGODB_URI environment variable is NOT set! Please configure MONGODB_URI in your Render / hosting environment variables.")
-}
+// Initiate connection immediately
+connectDB().catch((err) => {
+    console.error("Initial MongoDB connection attempt failed:", err.message)
+})
 
 // Health and root diagnostics
 app.get("/", (req, res) => {
