@@ -4,23 +4,28 @@ const dns = require("dns")
 // Fix SRV DNS lookup issues on Windows / Node 18+ for mongodb+srv://
 try {
     dns.setServers(["8.8.8.8", "8.8.4.4"])
-} catch (_) {}
+} catch (_) { }
 
 try {
     require("dotenv").config({ path: path.resolve(__dirname, "../.env"), quiet: true })
     require("dotenv").config({ quiet: true })
-} catch (_) {}
+} catch (_) { }
 
 const mongoose = require("mongoose")
 const cors = require("cors")
 const express = require("express")
 const bcrypt = require("bcrypt")
 const multer = require("multer")
-const { put } = require("@vercel/blob")
+const cloudinary = require("cloudinary").v2
 const jwt = require("jsonwebtoken")
 
 const app = express()
 
+cloudinary.config({
+    cloud_name: "qwzbf1ci",
+    api_key: "731282279818113",
+    api_secret: "CzgdOG48wsqFhOs19actclamqzg"
+})
 const corsfront = [
     "https://ecom-alpha-beryl.vercel.app",
     "http://localhost:5173",
@@ -62,7 +67,7 @@ app.use((req, res, next) => {
     }
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin")
-    
+
     if (req.method === "OPTIONS") {
         return res.sendStatus(204)
     }
@@ -125,7 +130,7 @@ app.get("/api/health", (req, res) => {
 app.get("/api/db-status", (req, res) => {
     const states = ["disconnected", "connected", "connecting", "disconnecting"]
     const state = mongoose.connection.readyState
-    
+
     let maskedUri = null
     if (databaseUrl) {
         try {
@@ -142,9 +147,9 @@ app.get("/api/db-status", (req, res) => {
         hasMongoUri: !!databaseUrl,
         mongoUri: maskedUri,
         hasJwtSecret: !!process.env.JWT_SECRET,
-        hasBlobToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+        hasCloudinary: true,
         lastError: lastDbError,
-        help: !databaseUrl 
+        help: !databaseUrl
             ? "Action required: Set MONGODB_URI in Render Dashboard (Web Service -> Environment) with your MongoDB Atlas connection string."
             : (state !== 1 ? "Action required: Check MongoDB Atlas Network Access and ensure IP '0.0.0.0/0' (Allow Access from Anywhere) is added." : "Database is connected and ready.")
     })
@@ -288,20 +293,30 @@ app.post("/api/contactus", async (req, res) => {
     }
 })
 
-const upload = multer({ storage: multer.memoryStorage() })
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+})
+
 const saveUpload = async (file) => {
     if (!file) return "no img"
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-        throw new Error("BLOB_READ_WRITE_TOKEN is required to upload images")
-    }
 
-    const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, "-")
-    const blob = await put(`uploads/${Date.now()}-${safeName}`, file.buffer, {
-        access: "public",
-        contentType: file.mimetype,
-        token: process.env.BLOB_READ_WRITE_TOKEN,
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder: "multikart_uploads",
+                resource_type: "auto",
+            },
+            (error, result) => {
+                if (error) {
+                    console.error("Cloudinary upload error:", error)
+                    return reject(error)
+                }
+                resolve(result.secure_url)
+            }
+        )
+        stream.end(file.buffer)
     })
-    return blob.url
 }
 
 const category = mongoose.Schema({
