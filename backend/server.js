@@ -7,8 +7,8 @@ try {
 } catch (_) {}
 
 try {
-    require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
-    require("dotenv").config()
+    require("dotenv").config({ path: path.resolve(__dirname, "../.env"), quiet: true })
+    require("dotenv").config({ quiet: true })
 } catch (_) {}
 
 const mongoose = require("mongoose")
@@ -88,7 +88,7 @@ async function connectDB() {
         serverSelectionTimeoutMS: 10000,
     }).then((conn) => {
         lastDbError = null
-        console.log("Connected to MongoDB successfully")
+        console.log("Database is running: Mongoose connected successfully")
         return conn
     }).catch((err) => {
         cachedPromise = null
@@ -197,6 +197,11 @@ const RegisterModel = new mongoose.model("register", registerschema, "register")
 
 app.post("/api/register", async (req, res) => {
     try {
+        const existing = await RegisterModel.findOne({ Email: req.body.email })
+        if (existing) {
+            return res.send({ statuscode: 0, message: "An account with this email already exists." })
+        }
+
         const hash = bcrypt.hashSync(req.body.password, 10)
         const result = new RegisterModel({
             FirstName: req.body.firstname,
@@ -630,7 +635,7 @@ app.use((err, req, res, next) => {
 
 if (require.main === module) {
     const port = process.env.PORT || 9000
-    app.listen(port, () => console.log(`connected to server on port ${port}`))
+    app.listen(port, () => console.log(`Server is running on port ${port}`))
 }
 
 module.exports = app
