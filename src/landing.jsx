@@ -30,79 +30,112 @@ export const Landing = () => {
 
     return (
         <>
-            <section class="pt-0 overflow-hidden slider-minus-margin">
-                <div class="slide-1">
+            <section className="pt-0 overflow-hidden slider-minus-margin">
+                <div className="slide-1">
                     <a href="category-page.html">
-                        <div class="home">
-                            <img src="/assets/images/electronics-1/full-banner/1.png" alt="" class="img-fluid blur-up lazyload" />
-
+                        <div className="home">
+                            <img src="/assets/images/electronics-1/full-banner/1.png" alt="" className="img-fluid blur-up lazyload" />
                         </div>
                     </a>
                     <a href="category-page.html">
-                        <div class="home">
-                            <img src="/assets/images/electronics-1/full-banner/2.png" alt="" class="img-fluid blur-up lazyload" />
+                        <div className="home">
+                            <img src="/assets/images/electronics-1/full-banner/2.png" alt="" className="img-fluid blur-up lazyload" />
                         </div>
                     </a>
                 </div>
             </section>
-<div className="d-flex align-items-center justify-content-center mt-5">
-    
-    {
-        cat.map((a)=>
-        <Link to={`/related?cid=${a._id}`}>
-        <div  >
-            <img src={imageUrl(a.Image)} height="100px" width="100px "></img>
-            <p>{a.Name}</p>
-        </div>
-        </Link>)
-    }
-</div>
 
-            <div class="layout-8-bg">
+            {/* Categories Section with Adjusted Gap */}
+            {cat && cat.length > 0 && (
+                <section className="py-4 my-2">
+                    <div className="container">
+                        <div className="d-flex align-items-center justify-content-center flex-wrap gap-4 gap-md-5">
+                            {cat.map((a) => (
+                                <Link 
+                                    key={a._id} 
+                                    to={`/related?cid=${a._id}`}
+                                    className="text-decoration-none text-center"
+                                    style={{ color: "inherit" }}
+                                >
+                                    <div 
+                                        className="d-flex flex-column align-items-center"
+                                        style={{ transition: "transform 0.25s ease" }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+                                    >
+                                        <div 
+                                            style={{
+                                                width: "95px",
+                                                height: "95px",
+                                                borderRadius: "50%",
+                                                backgroundColor: "#ffffff",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                overflow: "hidden",
+                                                boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+                                                border: "2px solid #eaeaea",
+                                                marginBottom: "10px",
+                                            }}
+                                        >
+                                            <img 
+                                                src={imageUrl(a.Image)} 
+                                                alt={a.Name} 
+                                                style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                                            />
+                                        </div>
+                                        <p className="m-0 fw-semibold text-capitalize" style={{ fontSize: "14px", color: "#333" }}>
+                                            {a.Name}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
-                <section class="banner-goggles banner-section">
-                    <div class="container">
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <a href="category-page.html" class="collection-banner">
-                                    <img src="/assets/images/electronics-1/banner/1.png" class="img-fluid blur-up lazyload" alt="" />
-
+            <div className="layout-8-bg">
+                <section className="banner-goggles banner-section">
+                    <div className="container">
+                        <div className="row g-4">
+                            <div className="col-md-4">
+                                <a href="category-page.html" className="collection-banner">
+                                    <img src="/assets/images/electronics-1/banner/1.png" className="img-fluid blur-up lazyload" alt="" />
                                 </a>
                             </div>
-                            <div class="col-md-4">
-                                <a href="category-page.html" class="collection-banner">
-                                    <img src="/assets/images/electronics-1/banner/2.png" class="img-fluid blur-up lazyload" alt="" />
+                            <div className="col-md-4">
+                                <a href="category-page.html" className="collection-banner">
+                                    <img src="/assets/images/electronics-1/banner/2.png" className="img-fluid blur-up lazyload" alt="" />
                                 </a>
                             </div>
-                            <div class="col-md-4">
-                                <a href="category-page.html" class="collection-banner">
-                                    <img src="/assets/images/electronics-1/banner/3.png" class="img-fluid blur-up lazyload" alt="" />
-
+                            <div className="col-md-4">
+                                <a href="category-page.html" className="collection-banner">
+                                    <img src="/assets/images/electronics-1/banner/3.png" className="img-fluid blur-up lazyload" alt="" />
                                 </a>
                             </div>
                         </div>
                     </div>
                 </section>
 
-
-                <section class="section-b-space ratio_square">
-                    <div class="container">
-                        <div class="title2">
+                <section className="section-b-space ratio_square">
+                    <div className="container">
+                        <div className="title2">
                             <h4>new collection</h4>
-                            <h2 class="title-inner2">trending products</h2>
+                            <h2 className="title-inner2">trending products</h2>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="theme-tab">
-                                    <ul class="tabs tab-title">
-                                        <li class="current"><a href="tab-1">new arrival</a></li>
+                        <div className="row">
+                            <div className="col">
+                                <div className="theme-tab">
+                                    <ul className="tabs tab-title">
+                                        <li className="current"><a href="tab-1">new arrival</a></li>
                                         <li><a href="tab-2">featured</a></li>
                                     </ul>
-                                    <div class="tab-content-cls">
-                                        <div id="tab-1" class="">
-                                            <div class="g-3 g-md-4 row row-cols-2 row-cols-md-3 row-cols-xl-4">
+                                    <div className="tab-content-cls">
+                                        <div id="tab-1" className="">
+                                            <div className="g-3 g-md-4 row row-cols-2 row-cols-md-3 row-cols-xl-4">
                                                 <div>
-                                                    <div class="basic-product theme-product-5">
+                                                    <div className="basic-product theme-product-5">
                                                         <div class="img-wrapper">
                                                             <a href="product-page(accordian).html"><img src="/assets/images/electronics-1/product/1.jpg" class="img-fluid blur-up lazyload" alt="" /></a>
                                                             <div class="cart-info">
